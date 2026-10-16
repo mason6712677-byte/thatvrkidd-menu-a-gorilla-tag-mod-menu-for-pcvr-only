@@ -5,43 +5,44 @@ using UnityEngine.XR;
 
 namespace GorillaModMenu
 {
-    [BepInPlugin("com.mymods.gorillamenu",
-                 "Gorilla Mod Menu", "1.0.0")]
+    [BepInPlugin("com.mason.gorillamenu",
+        "Gorilla Mod Menu", "1.0.0")]
     public class Plugin : BaseUnityPlugin
     {
         private bool menuOpen = false;
-        private bool lastYState = false;
+        private bool previousY = false;
 
         private void Awake()
         {
-            Logger.LogInfo("Gorilla Mod Menu loaded!");
+            Logger.LogInfo("Mod menu loaded!");
         }
 
         private void Update()
         {
-            InputDevice leftController =
+            InputDevice controller =
                 InputDevices.GetDeviceAtXRNode(
                     XRNode.LeftHand);
 
             bool yPressed = false;
 
-            if (leftController.isValid)
+            if (controller.isValid)
             {
-                leftController.TryGetFeatureValue(
+                controller.TryGetFeatureValue(
                     CommonUsages.secondaryButton,
                     out yPressed);
             }
 
-            // Toggle once per button press
-            if (yPressed && !lastYState)
+            if (yPressed && !previousY)
             {
                 menuOpen = !menuOpen;
 
                 Logger.LogInfo(
-                    menuOpen ? "Menu OPEN" : "Menu CLOSED");
+                    menuOpen
+                        ? "Menu opened!"
+                        : "Menu closed!");
             }
 
-            lastYState = yPressed;
+            previousY = yPressed;
         }
     }
 }
